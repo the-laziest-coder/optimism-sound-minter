@@ -1,5 +1,4 @@
 import requests
-import ua_generator
 from web3 import Web3
 from config import RPCs, GAS_PRICE_MULT
 from vars import CHAIN_NAMES
@@ -42,25 +41,3 @@ def build_and_send_tx(w3, address, private_key, func, value, verify_func, action
     })
 
     return send_tx(w3, private_key, tx, verify_func, action)
-
-
-origin, sec_fetch_site, address2ua = 'https://app.manifold.xyz', 'cross-site', {}
-
-
-def get_default_headers(address):
-    if address not in address2ua:
-        address2ua[address] = ua_generator.generate(device='desktop', browser='chrome')
-    ua = address2ua[address]
-    return {
-        'accept-encoding': 'gzip, deflate, br',
-        'accept-language': 'en-US,en;q=0.9',
-        'origin': origin,
-        'referer': origin + '/',
-        'sec-ch-ua': f'"{ua.ch.brands[2:]}"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': f'"{ua.platform.title()}"',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': sec_fetch_site,
-        'user-agent': ua.text,
-    }
