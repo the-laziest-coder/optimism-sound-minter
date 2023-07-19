@@ -129,7 +129,7 @@ class Runner:
 
     @runner_func('Already')
     def already_minted(self):
-        nft = self.w3('Optimism').eth.contract(V_BUTERIN_ADDRESS, abi=V_BUTERIN_ABI)
+        nft = self.w3('Optimism').eth.contract(NFT_ADDRESS, abi=NFT_ABI)
         return nft.functions.balanceOf(self.address).call()
 
     @runner_func('Mint')
@@ -138,12 +138,15 @@ class Runner:
 
         contract = w3.eth.contract(SOUND_XYZ_ADDRESS, abi=SOUND_XYZ_ABI)
 
-        mint_args = (V_BUTERIN_ADDRESS, 0, 1, ZERO_ADDRESS)
+        mint_args = (NFT_ADDRESS, MINT_INDEX, 1, ZERO_ADDRESS)
+
+        value = contract.functions.totalPriceAndFees(*mint_args[:-1]).call()[0]
 
         self.build_and_send_tx(
             w3,
             contract.functions.mint(*mint_args),
             action='Mint',
+            value=value
         )
 
     def run(self):
